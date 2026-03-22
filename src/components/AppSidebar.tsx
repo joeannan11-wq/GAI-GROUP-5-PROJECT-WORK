@@ -8,17 +8,17 @@ import {
   RotateCcw,
   Settings,
   Zap,
-  LogOut,
-} from "lucide-react";
+  LogOut } from
+"lucide-react";
 
 const navItems = [
-  { to: "/", icon: LayoutDashboard, label: "Dashboard" },
-  { to: "/create-exam", icon: FileUp, label: "Create Exam" },
-  { to: "/exams", icon: ClipboardList, label: "My Exams" },
-  { to: "/results", icon: BarChart3, label: "Results" },
-  { to: "/remarking", icon: RotateCcw, label: "Remarking" },
-  { to: "/settings", icon: Settings, label: "Settings" },
-];
+{ to: "/", icon: LayoutDashboard, label: "Dashboard" },
+{ to: "/create-exam", icon: FileUp, label: "Create Exam" },
+{ to: "/exams", icon: ClipboardList, label: "My Exams" },
+{ to: "/results", icon: BarChart3, label: "Results" },
+{ to: "/remarking", icon: RotateCcw, label: "Remarking" },
+{ to: "/settings", icon: Settings, label: "Settings" }];
+
 
 export function AppSidebar() {
   return (
@@ -29,31 +29,31 @@ export function AppSidebar() {
           <Zap className="h-5 w-5 text-sidebar-primary-foreground" />
         </div>
         <div>
-          <h1 className="text-lg font-bold text-sidebar-accent-foreground">THRIVE AFRICA'S TUTOR</h1>
+          <h1 className="text-lg font-bold text-sidebar-accent-foreground">THRIVE AFRICA</h1>
           <p className="text-xs text-sidebar-foreground/60">Exam Platform</p>
         </div>
       </div>
 
       {/* Navigation */}
       <nav className="mt-4 flex flex-1 flex-col gap-1 px-3">
-        {navItems.map((item) => (
-          <RouterNavLink
-            key={item.to}
-            to={item.to}
-            end={item.to === "/"}
-            className={({ isActive }) =>
-              cn(
-                "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors duration-150",
-                isActive
-                  ? "bg-sidebar-accent text-sidebar-accent-foreground"
-                  : "text-sidebar-foreground/70 hover:bg-sidebar-accent/50 hover:text-sidebar-accent-foreground"
-              )
-            }
-          >
+        {navItems.map((item) =>
+        <RouterNavLink
+          key={item.to}
+          to={item.to}
+          end={item.to === "/"}
+          className={({ isActive }) =>
+          cn(
+            "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors duration-150",
+            isActive ?
+            "bg-sidebar-accent text-sidebar-accent-foreground" :
+            "text-sidebar-foreground/70 hover:bg-sidebar-accent/50 hover:text-sidebar-accent-foreground"
+          )
+          }>
+          
             <item.icon className="h-[18px] w-[18px]" />
             {item.label}
           </RouterNavLink>
-        ))}
+        )}
       </nav>
 
       {/* User */}
@@ -71,6 +71,6 @@ export function AppSidebar() {
           </button>
         </div>
       </div>
-    </aside>
-  );
+    </aside>);
+
 }
