@@ -8,6 +8,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import {
+  Upload,
+  FileText,
   CheckCircle2,
   AlertTriangle,
   Pencil,
@@ -15,25 +17,59 @@ import {
   Plus,
   Zap,
   ArrowRight,
-  Upload,
-  Sparkles,
 } from "lucide-react";
 import { toast } from "sonner";
-import type { Step, ParsedQuestion } from "@/components/create-exam/types";
-import { typeLabel, typeColor } from "@/components/create-exam/types";
-import { UploadStep } from "@/components/create-exam/UploadStep";
-import { GenerateStep } from "@/components/create-exam/GenerateStep";
 
-type SourceMode = "upload" | "generate";
+type Step = "upload" | "review" | "configure";
+
+interface ParsedQuestion {
+  id: number;
+  type: "mcq" | "short" | "essay";
+  text: string;
+  options?: string[];
+  answer?: string;
+  marks: number;
+  flagged?: boolean;
+}
+
+const sampleQuestions: ParsedQuestion[] = [
+  { id: 1, type: "mcq", text: "What is the value of x if 2x + 5 = 15?", options: ["3", "5", "7", "10"], answer: "5", marks: 2 },
+  { id: 2, type: "mcq", text: "Which of the following is a prime number?", options: ["4", "9", "11", "15"], answer: "11", marks: 2 },
+  { id: 3, type: "short", text: "Simplify the expression: 3(x + 4) - 2(x - 1)", answer: "x + 14", marks: 3 },
+  { id: 4, type: "essay", text: "Explain the difference between a linear equation and a quadratic equation. Provide examples of each.", marks: 10, flagged: true },
+  { id: 5, type: "mcq", text: "What is the area of a circle with radius 7 cm? (Use π = 22/7)", options: ["44 cm²", "154 cm²", "88 cm²", "308 cm²"], answer: "154 cm²", marks: 2 },
+];
+
+const typeLabel = {
+  mcq: "Multiple Choice",
+  short: "Short Answer",
+  essay: "Essay",
+};
+
+const typeColor = {
+  mcq: "bg-info/15 text-info",
+  short: "bg-secondary/20 text-secondary-foreground",
+  essay: "bg-primary/10 text-primary",
+};
 
 export default function CreateExam() {
   const [step, setStep] = useState<Step>("upload");
-  const [sourceMode, setSourceMode] = useState<SourceMode>("upload");
+  const [file, setFile] = useState<File | null>(null);
+  const [parsing, setParsing] = useState(false);
   const [questions, setQuestions] = useState<ParsedQuestion[]>([]);
 
-  const handleQuestionsReady = (q: ParsedQuestion[]) => {
-    setQuestions(q);
-    setStep("review");
+  const handleUpload = () => {
+    if (!file) {
+      toast.error("Please select a file first");
+      return;
+    }
+    setParsing(true);
+    setTimeout(() => {
+      setParsing(false);
+      setQuestions(sampleQuestions);
+      setStep("review");
+      toast.success("5 questions extracted successfully!");
+    }, 2000);
   };
 
   const handlePublish = () => {
@@ -45,7 +81,7 @@ export default function CreateExam() {
       {/* Header */}
       <div className="animate-reveal-up">
         <h1 className="text-2xl font-bold text-foreground">Create Exam</h1>
-        <p className="mt-1 text-muted-foreground">Upload questions, generate from syllabus, review, and publish.</p>
+        <p className="mt-1 text-muted-foreground">Upload questions, review, and publish to students.</p>
       </div>
 
       {/* Steps */}
@@ -70,49 +106,68 @@ export default function CreateExam() {
               <span className="flex h-5 w-5 items-center justify-center rounded-full bg-current/20 text-xs">
                 {i + 1}
               </span>
-              {s === "upload" ? "Source" : s === "review" ? "Review" : "Configure"}
+              {s === "upload" ? "Upload" : s === "review" ? "Review" : "Configure"}
             </button>
             {i < 2 && <ArrowRight className="h-4 w-4 text-muted-foreground/40" />}
           </div>
         ))}
       </div>
 
-      {/* Upload/Generate Step */}
+      {/* Upload Step */}
       {step === "upload" && (
-        <div className="mt-8 space-y-6 animate-reveal-up stagger-2">
-          {/* Source Mode Toggle */}
-          <div className="flex rounded-xl border bg-muted/40 p-1 max-w-md">
-            <button
-              onClick={() => setSourceMode("upload")}
-              className={cn(
-                "flex flex-1 items-center justify-center gap-2 rounded-lg px-4 py-2.5 text-sm font-medium transition-all active:scale-[0.97]",
-                sourceMode === "upload"
-                  ? "bg-card text-foreground shadow-sm"
-                  : "text-muted-foreground hover:text-foreground"
-              )}
-            >
-              <Upload className="h-4 w-4" />
-              Upload File
-            </button>
-            <button
-              onClick={() => setSourceMode("generate")}
-              className={cn(
-                "flex flex-1 items-center justify-center gap-2 rounded-lg px-4 py-2.5 text-sm font-medium transition-all active:scale-[0.97]",
-                sourceMode === "generate"
-                  ? "bg-card text-foreground shadow-sm"
-                  : "text-muted-foreground hover:text-foreground"
-              )}
-            >
-              <Sparkles className="h-4 w-4" />
-              Generate from Syllabus
-            </button>
+        <div className="mt-8 animate-reveal-up stagger-2">
+          <div
+            className={cn(
+              "flex flex-col items-center justify-center rounded-2xl border-2 border-dashed p-12 transition-colors",
+              file ? "border-primary/40 bg-primary/5" : "border-border bg-card"
+            )}
+          >
+            {file ? (
+              <>
+                <div className="rounded-full bg-success/10 p-4">
+                  <FileText className="h-8 w-8 text-success" />
+                </div>
+                <p className="mt-4 text-sm font-semibold text-foreground">{file.name}</p>
+                <p className="mt-1 text-xs text-muted-foreground">{(file.size / 1024).toFixed(1)} KB</p>
+                <div className="mt-4 flex gap-2">
+                  <Button variant="outline" size="sm" onClick={() => setFile(null)}>Remove</Button>
+                  <Button size="sm" onClick={handleUpload} disabled={parsing}>
+                    {parsing ? (
+                      <>
+                        <Zap className="h-4 w-4 animate-pulse" />
+                        Parsing with AI...
+                      </>
+                    ) : (
+                      <>
+                        <Zap className="h-4 w-4" />
+                        Extract Questions
+                      </>
+                    )}
+                  </Button>
+                </div>
+              </>
+            ) : (
+              <>
+                <div className="rounded-full bg-muted p-4">
+                  <Upload className="h-8 w-8 text-muted-foreground" />
+                </div>
+                <p className="mt-4 text-sm font-semibold text-foreground">Upload exam questions</p>
+                <p className="mt-1 text-xs text-muted-foreground">PDF or Word document · Max 10MB</p>
+                <label className="mt-4">
+                  <input
+                    type="file"
+                    accept=".pdf,.doc,.docx"
+                    className="hidden"
+                    onChange={(e) => setFile(e.target.files?.[0] || null)}
+                  />
+                  <span className="inline-flex cursor-pointer items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90 active:scale-[0.97]">
+                    <Upload className="h-4 w-4" />
+                    Choose File
+                  </span>
+                </label>
+              </>
+            )}
           </div>
-
-          {sourceMode === "upload" ? (
-            <UploadStep onQuestionsReady={handleQuestionsReady} />
-          ) : (
-            <GenerateStep onQuestionsReady={handleQuestionsReady} />
-          )}
         </div>
       )}
 
@@ -132,7 +187,7 @@ export default function CreateExam() {
             </div>
             <div className="flex gap-2">
               <Button variant="outline" size="sm" onClick={() => setStep("upload")}>
-                Back to Source
+                Re-upload
               </Button>
               <Button size="sm" onClick={() => setStep("configure")}>
                 Continue
