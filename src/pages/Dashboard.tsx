@@ -6,11 +6,11 @@ import { FileUp, ClipboardList, Users, CheckCircle2, TrendingUp, Plus } from "lu
 import { useNavigate } from "react-router-dom";
 
 const recentExams = [
-  { title: "Mid-Term Mathematics", subject: "Mathematics", grade: "JHS 3", status: "active" as const, studentCount: 42, duration: "2 hrs", deadline: "Mar 25, 2026 · 2:00 PM" },
-  { title: "Science Weekly Quiz", subject: "Integrated Science", grade: "SHS 1", status: "graded" as const, studentCount: 38, duration: "45 min" },
-  { title: "English Language Essay", subject: "English", grade: "JHS 2", status: "completed" as const, studentCount: 45, duration: "1 hr 30 min" },
-  { title: "Social Studies Test", subject: "Social Studies", grade: "SHS 2", status: "draft" as const, studentCount: 0, duration: "1 hr" },
-];
+{ title: "Mid-Term Mathematics", subject: "Mathematics", grade: "JHS 3", status: "active" as const, studentCount: 42, duration: "2 hrs", deadline: "Mar 25, 2026 · 2:00 PM" },
+{ title: "Science Weekly Quiz", subject: "Integrated Science", grade: "SHS 1", status: "graded" as const, studentCount: 38, duration: "45 min" },
+{ title: "English Language Essay", subject: "English", grade: "JHS 2", status: "completed" as const, studentCount: 45, duration: "1 hr 30 min" },
+{ title: "Social Studies Test", subject: "Social Studies", grade: "SHS 2", status: "draft" as const, studentCount: 0, duration: "1 hr" }];
+
 
 export default function Dashboard() {
   const navigate = useNavigate();
@@ -46,9 +46,9 @@ export default function Dashboard() {
           </Button>
         </div>
         <div className="mt-4 grid grid-cols-2 gap-4">
-          {recentExams.map((exam, i) => (
-            <ExamCard key={exam.title} {...exam} delay={400 + i * 80} />
-          ))}
+          {recentExams.map((exam, i) =>
+          <ExamCard key={exam.title} {...exam} delay={400 + i * 80} />
+          )}
         </div>
       </div>
 
@@ -58,8 +58,8 @@ export default function Dashboard() {
         <div className="mt-4 grid grid-cols-3 gap-4">
           <button
             onClick={() => navigate("/create-exam")}
-            className="group flex flex-col items-center gap-3 rounded-xl border-2 border-dashed border-border bg-card p-6 transition-all duration-200 hover:border-primary/40 hover:bg-primary/5 active:scale-[0.97]"
-          >
+            className="group flex flex-col items-center gap-3 rounded-xl border-2 border-dashed border-border p-6 transition-all duration-200 hover:border-primary/40 active:scale-[0.97] bg-primary">
+            
             <div className="rounded-full bg-primary/10 p-3 transition-colors group-hover:bg-primary/20">
               <FileUp className="h-5 w-5 text-primary" />
             </div>
@@ -70,8 +70,8 @@ export default function Dashboard() {
           </button>
           <button
             onClick={() => navigate("/results")}
-            className="group flex flex-col items-center gap-3 rounded-xl border-2 border-dashed border-border bg-card p-6 transition-all duration-200 hover:border-primary/40 hover:bg-primary/5 active:scale-[0.97]"
-          >
+            className="group flex flex-col items-center gap-3 rounded-xl border-2 border-dashed border-border p-6 transition-all duration-200 hover:border-primary/40 active:scale-[0.97] bg-success">
+            
             <div className="rounded-full bg-primary/10 p-3 transition-colors group-hover:bg-primary/20">
               <TrendingUp className="h-5 w-5 text-primary" />
             </div>
@@ -82,8 +82,8 @@ export default function Dashboard() {
           </button>
           <button
             onClick={() => navigate("/remarking")}
-            className="group flex flex-col items-center gap-3 rounded-xl border-2 border-dashed border-border bg-card p-6 transition-all duration-200 hover:border-primary/40 hover:bg-primary/5 active:scale-[0.97]"
-          >
+            className="group flex flex-col items-center gap-3 rounded-xl border-2 border-dashed border-border p-6 transition-all duration-200 hover:border-primary/40 active:scale-[0.97] bg-destructive">
+            
             <div className="rounded-full bg-primary/10 p-3 transition-colors group-hover:bg-primary/20">
               <ClipboardList className="h-5 w-5 text-primary" />
             </div>
@@ -94,6 +94,6 @@ export default function Dashboard() {
           </button>
         </div>
       </div>
-    </AppLayout>
-  );
+    </AppLayout>);
+
 }
