@@ -54,7 +54,7 @@ export default function Dashboard() {
 
       {/* Quick Actions */}
       <div className="mt-10 animate-reveal-up" style={{ animationDelay: "650ms" }}>
-        <h2 className="text-lg font-semibold text-foreground">Quick Actions</h2>
+        <h2 className="text-lg font-semibold text-foreground bg-background">Quick Actions</h2>
         <div className="mt-4 grid grid-cols-3 gap-4">
           <button
             onClick={() => navigate("/create-exam")}
