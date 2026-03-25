@@ -14,6 +14,50 @@ export type Database = {
   }
   public: {
     Tables: {
+      exam_questions: {
+        Row: {
+          correct_answer: string | null
+          created_at: string
+          exam_id: string
+          id: string
+          marks: number
+          options: Json | null
+          question_number: number
+          text: string
+          type: string
+        }
+        Insert: {
+          correct_answer?: string | null
+          created_at?: string
+          exam_id: string
+          id?: string
+          marks?: number
+          options?: Json | null
+          question_number: number
+          text: string
+          type: string
+        }
+        Update: {
+          correct_answer?: string | null
+          created_at?: string
+          exam_id?: string
+          id?: string
+          marks?: number
+          options?: Json | null
+          question_number?: number
+          text?: string
+          type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "exam_questions_exam_id_fkey"
+            columns: ["exam_id"]
+            isOneToOne: false
+            referencedRelation: "published_exams"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           created_at: string
@@ -50,6 +94,7 @@ export type Database = {
           grade: string
           id: string
           is_active: boolean
+          school: string | null
           subject: string
           teacher_id: string
           title: string
@@ -62,6 +107,7 @@ export type Database = {
           grade: string
           id?: string
           is_active?: boolean
+          school?: string | null
           subject: string
           teacher_id: string
           title: string
@@ -74,11 +120,56 @@ export type Database = {
           grade?: string
           id?: string
           is_active?: boolean
+          school?: string | null
           subject?: string
           teacher_id?: string
           title?: string
         }
         Relationships: []
+      }
+      student_submissions: {
+        Row: {
+          answers: Json
+          exam_id: string
+          id: string
+          score: number | null
+          started_at: string
+          status: string
+          student_id: string
+          submitted_at: string | null
+          total_marks: number | null
+        }
+        Insert: {
+          answers?: Json
+          exam_id: string
+          id?: string
+          score?: number | null
+          started_at?: string
+          status?: string
+          student_id: string
+          submitted_at?: string | null
+          total_marks?: number | null
+        }
+        Update: {
+          answers?: Json
+          exam_id?: string
+          id?: string
+          score?: number | null
+          started_at?: string
+          status?: string
+          student_id?: string
+          submitted_at?: string | null
+          total_marks?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "student_submissions_exam_id_fkey"
+            columns: ["exam_id"]
+            isOneToOne: false
+            referencedRelation: "published_exams"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       user_roles: {
         Row: {
