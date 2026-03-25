@@ -68,7 +68,12 @@ export default function TakeExam() {
         .eq("exam_id", examId)
         .order("question_number");
 
-      setQuestions(qData ?? []);
+      setQuestions(
+        (qData ?? []).map((q) => ({
+          ...q,
+          options: Array.isArray(q.options) ? (q.options as string[]) : null,
+        }))
+      );
 
       // Check/create submission
       const { data: existing } = await supabase
