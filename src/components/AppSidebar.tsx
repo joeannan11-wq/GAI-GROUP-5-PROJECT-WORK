@@ -1,6 +1,7 @@
 import { cn } from "@/lib/utils";
 import { NavLink as RouterNavLink } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
+import { useUserRole } from "@/hooks/useUserRole";
 import {
   LayoutDashboard,
   FileUp,
@@ -10,9 +11,10 @@ import {
   Settings,
   Zap,
   LogOut,
+  GraduationCap,
 } from "lucide-react";
 
-const navItems = [
+const teacherNav = [
   { to: "/", icon: LayoutDashboard, label: "Dashboard" },
   { to: "/create-exam", icon: FileUp, label: "Create Exam" },
   { to: "/exams", icon: ClipboardList, label: "My Exams" },
@@ -21,15 +23,23 @@ const navItems = [
   { to: "/settings", icon: Settings, label: "Settings" },
 ];
 
+const studentNav = [
+  { to: "/", icon: LayoutDashboard, label: "Dashboard" },
+  { to: "/settings", icon: Settings, label: "Settings" },
+];
+
 export function AppSidebar() {
   const { user, signOut } = useAuth();
-  const fullName = user?.user_metadata?.full_name || user?.email || "Teacher";
+  const { role } = useUserRole();
+  const fullName = user?.user_metadata?.full_name || user?.email || "User";
   const initials = fullName
     .split(" ")
     .map((n: string) => n[0])
     .join("")
     .slice(0, 2)
     .toUpperCase();
+
+  const navItems = role === "student" ? studentNav : teacherNav;
 
   return (
     <aside className="fixed inset-y-0 left-0 z-30 flex w-64 flex-col bg-sidebar text-sidebar-foreground">
@@ -74,7 +84,9 @@ export function AppSidebar() {
           </div>
           <div className="flex-1 min-w-0">
             <p className="text-sm font-medium text-sidebar-accent-foreground truncate">{fullName}</p>
-            <p className="text-xs text-sidebar-foreground/60 truncate">{user?.email}</p>
+            <div className="flex items-center gap-1">
+              <p className="text-xs text-sidebar-foreground/60 truncate">{user?.email}</p>
+            </div>
           </div>
           <button
             onClick={signOut}
