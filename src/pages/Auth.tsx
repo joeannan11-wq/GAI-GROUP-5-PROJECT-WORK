@@ -1,14 +1,15 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Zap, Loader2, GraduationCap, BookOpen } from "lucide-react";
+import { Zap, Loader2, GraduationCap, BookOpen, Search } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { z } from "zod";
 import { cn } from "@/lib/utils";
+import { useSchools } from "@/hooks/useSchools";
 
 const loginSchema = z.object({
   email: z.string().trim().email("Please enter a valid email"),
@@ -28,8 +29,16 @@ export default function Auth() {
   const [fullName, setFullName] = useState("");
   const [role, setRole] = useState<"teacher" | "student">("teacher");
   const [school, setSchool] = useState("");
+  const [schoolSearch, setSchoolSearch] = useState("");
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
+  const { schools } = useSchools();
+
+  const filteredSchools = useMemo(() => {
+    if (!schoolSearch) return schools;
+    const q = schoolSearch.toLowerCase();
+    return schools.filter((s) => s.name.toLowerCase().includes(q) || s.region.toLowerCase().includes(q));
+  }, [schools, schoolSearch]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -143,15 +152,30 @@ export default function Auth() {
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="school">School Name</Label>
-                    <Input
-                      id="school"
-                      placeholder="e.g. Accra Academy"
-                      value={school}
-                      onChange={(e) => setSchool(e.target.value)}
-                      required
-                      maxLength={200}
-                    />
+                    <Label htmlFor="school">School</Label>
+                    <Select value={school} onValueChange={setSchool}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select your school" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <div className="px-2 pb-2">
+                          <Input
+                            placeholder="Search school..."
+                            value={schoolSearch}
+                            onChange={(e) => setSchoolSearch(e.target.value)}
+                            className="h-8 text-sm"
+                          />
+                        </div>
+                        {filteredSchools.map((s) => (
+                          <SelectItem key={s.id} value={s.name}>
+                            {s.name} — {s.region}
+                          </SelectItem>
+                        ))}
+                        {filteredSchools.length === 0 && (
+                          <p className="text-xs text-muted-foreground text-center py-2">No schools found</p>
+                        )}
+                      </SelectContent>
+                    </Select>
                   </div>
                 </>
               )}
