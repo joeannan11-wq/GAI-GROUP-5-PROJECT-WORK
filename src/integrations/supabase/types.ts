@@ -127,6 +127,72 @@ export type Database = {
         }
         Relationships: []
       }
+      question_bank: {
+        Row: {
+          correct_answer: string | null
+          created_at: string
+          difficulty: string
+          grade: string
+          id: string
+          marks: number
+          options: Json | null
+          subject: string
+          text: string
+          topic: string
+          type: string
+        }
+        Insert: {
+          correct_answer?: string | null
+          created_at?: string
+          difficulty?: string
+          grade: string
+          id?: string
+          marks?: number
+          options?: Json | null
+          subject: string
+          text: string
+          topic: string
+          type: string
+        }
+        Update: {
+          correct_answer?: string | null
+          created_at?: string
+          difficulty?: string
+          grade?: string
+          id?: string
+          marks?: number
+          options?: Json | null
+          subject?: string
+          text?: string
+          topic?: string
+          type?: string
+        }
+        Relationships: []
+      }
+      schools: {
+        Row: {
+          created_at: string
+          id: string
+          name: string
+          region: string
+          type: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          name: string
+          region: string
+          type?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          name?: string
+          region?: string
+          type?: string
+        }
+        Relationships: []
+      }
       student_submissions: {
         Row: {
           answers: Json
