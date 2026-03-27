@@ -21,6 +21,7 @@ import {
 import { toast } from "sonner";
 import { UploadTab } from "@/components/create-exam/UploadTab";
 import { GenerateTab } from "@/components/create-exam/GenerateTab";
+import { QuestionBankTab } from "@/components/create-exam/QuestionBankTab";
 import type { Step, ParsedQuestion } from "@/components/create-exam/types";
 
 const sampleQuestions: ParsedQuestion[] = [
@@ -42,7 +43,7 @@ export default function CreateExam() {
   const [step, setStep] = useState<Step>("upload");
   const [questions, setQuestions] = useState<ParsedQuestion[]>([]);
   const [parsing, setParsing] = useState(false);
-  const [sourceMode, setSourceMode] = useState<"upload" | "generate">("upload");
+  const [sourceMode, setSourceMode] = useState<"upload" | "generate" | "bank">("upload");
 
   const handleUploadExtracted = () => {
     setQuestions(sampleQuestions);
@@ -100,7 +101,7 @@ export default function CreateExam() {
       {step === "upload" && (
         <div className="mt-8 animate-reveal-up stagger-2 space-y-5">
           {/* Source mode toggle */}
-          <div className="inline-flex rounded-xl border bg-muted/50 p-1 gap-1">
+          <div className="inline-flex rounded-xl border bg-muted/50 p-1 gap-1 flex-wrap">
             <button
               onClick={() => setSourceMode("upload")}
               className={cn(
@@ -125,6 +126,18 @@ export default function CreateExam() {
               <Sparkles className="h-4 w-4" />
               Generate from Syllabus
             </button>
+            <button
+              onClick={() => setSourceMode("bank")}
+              className={cn(
+                "flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition-all active:scale-[0.97]",
+                sourceMode === "bank"
+                  ? "bg-card text-foreground shadow-sm"
+                  : "text-muted-foreground hover:text-foreground"
+              )}
+            >
+              <Plus className="h-4 w-4" />
+              Question Bank
+            </button>
           </div>
 
           {sourceMode === "upload" ? (
@@ -133,8 +146,10 @@ export default function CreateExam() {
               parsing={parsing}
               setParsing={setParsing}
             />
-          ) : (
+          ) : sourceMode === "generate" ? (
             <GenerateTab onQuestionsGenerated={handleAIGenerated} />
+          ) : (
+            <QuestionBankTab onQuestionsSelected={handleAIGenerated} />
           )}
         </div>
       )}
