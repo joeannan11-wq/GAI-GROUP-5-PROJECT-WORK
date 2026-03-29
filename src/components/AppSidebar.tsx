@@ -49,8 +49,8 @@ export function AppSidebar() {
           <Zap className="h-5 w-5 text-sidebar-primary-foreground" />
         </div>
         <div>
-          <h1 className="text-lg font-bold text-sidebar-accent-foreground"><h1 className="text-lg font-bold text-sidebar-accent-foreground">AI-POWERED STUDENT DIAGNOSTIC & FEEDBACK</h1></h1>
-          <p className="text-xs text-sidebar-foreground/60">Exam Platform</p>
+          <h1 className="text-lg font-bold text-sidebar-accent-foreground text-wrap">AI-POWERED STUDENT DIAGNOSTIC & FEEDBACK</h1>
+          <p className="text-xs text-sidebar-foreground/60">Teacher's Platform</p>
         </div>
       </div>
 
