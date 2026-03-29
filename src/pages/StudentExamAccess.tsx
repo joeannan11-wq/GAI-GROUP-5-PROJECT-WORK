@@ -61,7 +61,7 @@ export default function StudentExamAccess() {
             <Zap className="h-7 w-7 text-primary-foreground" />
           </div>
           <div className="text-center">
-            <h1 className="text-xl font-bold text-foreground">THRIVE AFRICA'S TUTOR</h1>
+            <h1 className="text-xl font-bold text-foreground"><h1 className="text-xl font-bold text-foreground">AI-POWERED STUDENT DIAGNOSTIC & FEEDBACK</h1></h1>
             <p className="text-sm text-muted-foreground">Student Exam Portal</p>
           </div>
         </div>
